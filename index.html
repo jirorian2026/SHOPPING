@@ -223,7 +223,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
     <div class="prog-row"><span id="pt">0 / 0 完了</span><span id="pp">0%</span></div>
     <div class="prog-wrap"><div class="prog-fill" id="pb" style="width:0%"></div></div>
     <div class="pfc-toggle-row">
-      <div class="pfc-toggle-label"><i class="ti ti-chart-bar"></i>PFC栄養素を表示（100gあたり）</div>
+      <div class="pfc-toggle-label"><i class="ti ti-chart-bar"></i>栄養素（たんぱく質・脂質・炭水化物）を表示</div>
       <label class="toggle-wrap">
         <input type="checkbox" id="pfcToggle" onchange="onPfcToggle()">
         <div class="toggle-track"></div>
@@ -232,9 +232,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
     </div>
     <div class="pfc-total-row" id="pfcTotalRow">
       <span class="label">合計</span>
-      <span class="pfc-total-tag">P <b id="tP">0</b>g</span>
-      <span class="pfc-total-tag">F <b id="tF">0</b>g</span>
-      <span class="pfc-total-tag">C <b id="tC">0</b>g</span>
+      <span class="pfc-total-tag">たんぱく質 <b id="tP">0</b>g</span>
+      <span class="pfc-total-tag">脂質 <b id="tF">0</b>g</span>
+      <span class="pfc-total-tag">炭水化物 <b id="tC">0</b>g</span>
     </div>
   </div>
   <div class="scroll" id="lc"></div>
@@ -428,9 +428,9 @@ function showPfcForm(itemId,name,el){
   const form=document.createElement('div');
   form.className='pfc-edit-form';
   form.innerHTML=
-    `<label>P</label><input type="number" id="ep_${itemId}" placeholder="0.0" min="0" step="0.1">`+
-    `<label>F</label><input type="number" id="ef_${itemId}" placeholder="0.0" min="0" step="0.1">`+
-    `<label>C</label><input type="number" id="ec_${itemId}" placeholder="0.0" min="0" step="0.1">`+
+    `<label>たんぱく質</label><input type="number" id="ep_${itemId}" placeholder="0.0" min="0" step="0.1">`+
+    `<label>脂質</label><input type="number" id="ef_${itemId}" placeholder="0.0" min="0" step="0.1">`+
+    `<label>炭水化物</label><input type="number" id="ec_${itemId}" placeholder="0.0" min="0" step="0.1">`+
     `<button class="pfc-save-btn" onclick="savePfcLearn('${name}',${itemId})">保存</button>`+
     `<button class="pfc-cancel-btn" onclick="render()">×</button>`;
   el.parentNode.appendChild(form);
@@ -668,9 +668,9 @@ function render(){
       if(pfcVisible){
         if(pfc){
           pfcHtml=`<div class="pfc-row visible">`+
-            `<span class="pfc-tag">P:<span>${pfc[0]}</span>g</span>`+
-            `<span class="pfc-tag">F:<span>${pfc[1]}</span>g</span>`+
-            `<span class="pfc-tag">C:<span>${pfc[2]}</span>g</span>`+
+            `<span class="pfc-tag">たんぱく質:<span>${pfc[0]}</span>g</span>`+
+            `<span class="pfc-tag">脂質:<span>${pfc[1]}</span>g</span>`+
+            `<span class="pfc-tag">炭水化物:<span>${pfc[2]}</span>g</span>`+
             (learned?'<span style="font-size:10px;color:var(--green);margin-left:2px">✎学習済</span>':'')+
             `</div>`;
         }else{
