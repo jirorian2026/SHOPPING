@@ -8,8 +8,6 @@
 <meta name="apple-mobile-web-app-title" content="買い物リスト">
 <title>買い物リスト</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
-<script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.20.0/umd/index.min.js"></script>
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -258,16 +256,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
         <button class="add-btn" onclick="addItems()"><i class="ti ti-plus"></i> 追加</button>
       </div>
     </div>
-    <!-- バーコード読み取り（写真撮影方式） -->
-    <div class="scan-btns-row">
-      <button class="scan-add-btn" onclick="startBarcodeScanAdd()">
-        <i class="ti ti-camera" style="font-size:20px;color:var(--green)"></i>
-        <div>
-          <div style="font-size:14px;font-weight:600">バーコードを撮影して追加</div>
-          <div style="font-size:11px;opacity:.7;margin-top:1px">バーコードを撮影 → 食品名・栄養素を自動取得</div>
-        </div>
-      </button>
-    </div>
   </div>
 </div>
 
@@ -282,42 +270,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
     <div class="prev-sheet-foot">
       <button class="prev-restore-btn" onclick="restoreSelected()">選択した食品を追加する</button>
     </div>
-  </div>
-</div>
-
-<!-- バーコード読み取り用（写真撮影方式・ライブカメラ不使用） -->
-<input type="file" id="barcodeInput" accept="image/*" capture="environment" style="display:none" onchange="processBarcodeImage(event)">
-
-<!-- PFC確認シート -->
-<div class="cf-modal" id="cfModal">
-  <div class="cf-sheet">
-    <div class="cf-prod" id="cfProd"></div>
-    <input type="text" id="cfNameInput" placeholder="食品名を入力（例：カップヌードル）" style="width:100%;height:42px;border:0.5px solid var(--border);border-radius:8px;padding:0 12px;font-size:15px;background:var(--bg);color:var(--text);outline:none;font-family:inherit;margin-bottom:10px;">
-    <div id="cfNameFixed" style="font-size:13px;color:var(--text-hint);margin-bottom:10px;"></div>
-    <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px;">栄養素（100gあたり）— 数値は修正できます</div>
-    <div class="cf-pfc">
-      <div class="cf-col"><label>たんぱく質(g)</label><input type="number" id="cfP" step="0.1" min="0"></div>
-      <div class="cf-col"><label>脂質(g)</label><input type="number" id="cfF" step="0.1" min="0"></div>
-      <div class="cf-col"><label>炭水化物(g)</label><input type="number" id="cfC" step="0.1" min="0"></div>
-    </div>
-    <button class="cf-ok" onclick="confirmPfc()" id="cfOkLabel">登録する</button>
-    <button class="cf-ng" onclick="document.getElementById('cfModal').classList.remove('open')">キャンセル</button>
-  </div>
-</div>
-
-<!-- カメラ選択アクションシート（バーコード or 手動） -->
-<div class="as-wrap" id="asWrap" onclick="if(event.target===this)closeActionSheet()">
-  <div class="as-body">
-    <div class="as-hd" id="asTitle">栄養情報の登録方法</div>
-    <button class="as-btn" onclick="startBarcodeFromAction()">
-      <i class="ti ti-scan"></i>
-      <div>バーコードをスキャン<small>商品バーコードから自動取得（Open Food Facts）</small></div>
-    </button>
-    <button class="as-btn" onclick="showManualForm()">
-      <i class="ti ti-pencil"></i>
-      <div>手動で入力<small>P / F / C を直接入力する</small></div>
-    </button>
-    <button class="as-btn red" onclick="closeActionSheet()"><i class="ti ti-x"></i>キャンセル</button>
   </div>
 </div>
 
@@ -456,162 +408,16 @@ function savePrevList(){localStorage.setItem('prevList',JSON.stringify(prevList)
 // ライブカメラではなく「1枚撮影→ZXingで静止画解析」方式
 // iOS標準カメラが開くためiOS14以上全機種対応
 let _asTarget=null;
-let _scanMode='add';
 
-function startBarcodeScanAdd(){
-  _scanMode='add'; _asTarget=null;
-  _triggerBarcodeInput();
-}
-function startBarcodeScanPfc(itemId,name){
-  _scanMode='pfc'; _asTarget={itemId,name};
-  _triggerBarcodeInput();
-}
 function openCameraAction(itemId,name){
   _asTarget={itemId,name};
-  document.getElementById('asTitle').textContent=`「${name}」の栄養情報を登録`;
-  document.getElementById('asWrap').classList.add('open');
+  showManualForm();
 }
-function startBarcodeFromAction(){
-  closeActionSheet();
-  if(!_asTarget) return;
-  startBarcodeScanPfc(_asTarget.itemId,_asTarget.name);
-}
-function closeActionSheet(){document.getElementById('asWrap').classList.remove('open');}
 function showManualForm(){
-  closeActionSheet();
   if(!_asTarget) return;
   if(!pfcVisible){pfcVisible=true;document.getElementById('pfcToggle').checked=true;savePfc();render();}
   const nd=document.getElementById(`nd_${_asTarget.itemId}`);
   if(nd) showPfcForm(_asTarget.itemId,_asTarget.name,nd);
-}
-function closeScanner(){} // ライブカメラ廃止のため不要
-
-function _triggerBarcodeInput(){
-  if(typeof ZXing==='undefined'){
-    showToast('ライブラリ読み込み中です。少し待ってから再度タップしてください');
-    return;
-  }
-  const input=document.getElementById('barcodeInput');
-  input.value='';
-  input.click();
-}
-
-async function processBarcodeImage(e){
-  const file=e.target.files[0];
-  if(!file) return;
-  showToast('バーコードを解析中...');
-  const url=URL.createObjectURL(file);
-  try{
-    // 大きい画像を1280px幅にリサイズしてからZXingで解析
-    const canvas=await _fileToCanvas(url,1280);
-    URL.revokeObjectURL(url);
-    const lum=new ZXing.HTMLCanvasElementLuminanceSource(canvas);
-    const bitmap=new ZXing.BinaryBitmap(new ZXing.HybridBinarizer(lum));
-    const hints=new Map([[ZXing.DecodeHintType.TRY_HARDER,true]]);
-    const reader=new ZXing.MultiFormatReader();
-    reader.setHints(hints);
-    const result=reader.decode(bitmap);
-    await _fetchOpenFoodFacts(result.getText());
-  }catch(err){
-    URL.revokeObjectURL(url);
-    showToast('バーコードを検出できませんでした。バーコードに近づけて再撮影してください');
-    _openCfModalFallback();
-  }
-}
-
-function _fileToCanvas(url,maxW){
-  return new Promise((resolve,reject)=>{
-    const img=new Image();
-    img.onload=()=>{
-      const scale=Math.min(1,maxW/img.naturalWidth);
-      const w=Math.round(img.naturalWidth*scale);
-      const h=Math.round(img.naturalHeight*scale);
-      const c=document.createElement('canvas');
-      c.width=w; c.height=h;
-      c.getContext('2d').drawImage(img,0,0,w,h);
-      resolve(c);
-    };
-    img.onerror=reject;
-    img.src=url;
-  });
-}
-async function _fetchOpenFoodFacts(barcode){
-  showToast('商品情報を検索中...');
-  try{
-    const r=await fetch(`https://world.openfoodfacts.org/api/v2/product/${barcode}.json?fields=product_name,product_name_ja,nutriments`);
-    const d=await r.json();
-    if(d.status===1&&d.product){
-      const n=d.product.nutriments||{};
-      const p=Math.round((n['proteins_100g']||0)*10)/10;
-      const f=Math.round((n['fat_100g']||0)*10)/10;
-      const c=Math.round((n['carbohydrates_100g']||0)*10)/10;
-      const prod=d.product.product_name_ja||d.product.product_name||'';
-      _openCfModal(prod,p,f,c);
-    }else{
-      // 日本食品はDBに未収録が多い → 手動入力フォームを自動で開く
-      _openCfModalFallback();
-    }
-  }catch(e){
-    _openCfModalFallback();
-  }
-}
-
-// バーコードは読めたがDB未収録の場合、手動入力フォームを開く
-function _openCfModalFallback(){
-  const nameInput=document.getElementById('cfNameInput');
-  const nameFixed=document.getElementById('cfNameFixed');
-  document.getElementById('cfProd').textContent='バーコード読み取り済（DB未収録）';
-  nameInput.style.display='';nameFixed.style.display='none';
-  nameInput.value='';
-  nameInput.placeholder='食品名を入力（例：カルビーポテトチップス）';
-  document.getElementById('cfP').value='';
-  document.getElementById('cfF').value='';
-  document.getElementById('cfC').value='';
-  document.getElementById('cfOkLabel').textContent='リストに追加する';
-  document.getElementById('cfModal').classList.add('open');
-  showToast('商品DBに未収録です。食品名とPFCを入力してください');
-  setTimeout(()=>nameInput.focus(),350);
-}
-
-// ─── PFC確認・追加モーダル ────────────────────────────────
-function _openCfModal(productName,p,f,c){
-  const nameInput=document.getElementById('cfNameInput');
-  const nameFixed=document.getElementById('cfNameFixed');
-  if(_scanMode==='add'){
-    document.getElementById('cfProd').textContent='スキャン結果';
-    nameInput.style.display='';nameFixed.style.display='none';
-    nameInput.value=productName;
-    document.getElementById('cfOkLabel').textContent='リストに追加する';
-  }else{
-    document.getElementById('cfProd').textContent=(_asTarget?_asTarget.name:'')+'のPFCを登録';
-    nameInput.style.display='none';nameFixed.style.display='';
-    nameFixed.textContent=productName?`商品：${productName}`:'';
-    document.getElementById('cfOkLabel').textContent='このPFCを登録する';
-  }
-  document.getElementById('cfP').value=p;
-  document.getElementById('cfF').value=f;
-  document.getElementById('cfC').value=c;
-  document.getElementById('cfModal').classList.add('open');
-}
-function confirmPfc(){
-  const p=parseFloat(document.getElementById('cfP').value)||0;
-  const f=parseFloat(document.getElementById('cfF').value)||0;
-  const c=parseFloat(document.getElementById('cfC').value)||0;
-  if(_scanMode==='add'){
-    const name=document.getElementById('cfNameInput').value.trim();
-    if(!name){showToast('食品名を入力してください');return;}
-    learnedPFC[name]=[p,f,c]; saveLearnedPFC();
-    items.push({id:nextId++,name,cat:classify(name),checked:false});
-    save();render();
-    document.getElementById('cfModal').classList.remove('open');
-    showToast(`「${name}」を追加しました（PFC登録済）`);
-  }else{
-    if(!_asTarget) return;
-    learnedPFC[_asTarget.name]=[p,f,c]; saveLearnedPFC();
-    document.getElementById('cfModal').classList.remove('open');
-    render();
-    showToast(`「${_asTarget.name}」のPFCを登録しました`);
-  }
 }
 
 // ─── PFC手入力フォーム ────────────────────────────────────
@@ -869,8 +675,7 @@ function render(){
             `</div>`;
         }else{
           pfcHtml=`<div class="pfc-row visible"><div class="pfc-nodata" id="nd_${it.id}">`+
-            `<button class="pfc-scan-btn2" onclick="event.stopPropagation();openCameraAction(${it.id},'${it.name.replace(/'/g,"\\'")}')"><i class="ti ti-scan"></i> バーコード</button>`+
-            `<button class="pfc-manual-btn2" onclick="event.stopPropagation();_asTarget={itemId:${it.id},name:'${it.name.replace(/'/g,"\\'")}'};showManualForm()"><i class="ti ti-pencil"></i> 手動入力</button>`+
+            `<button class="pfc-manual-btn2" onclick="event.stopPropagation();_asTarget={itemId:${it.id},name:'${it.name.replace(/'/g,"\\'")}'};showManualForm()"><i class="ti ti-pencil"></i> PFCを手動入力</button>`+
             `</div></div>`;
         }
       }
