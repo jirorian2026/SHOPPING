@@ -76,6 +76,18 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .pfc-tag{font-size:11px;}
 .pfc-tag span{font-weight:500;}
 .pfc-nodata{display:flex;align-items:center;gap:5px;}
+/* 数量バッジ・編集 */
+.item-name-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.qty-badge{display:inline-flex;align-items:center;background:var(--surface);border:0.5px solid var(--border);border-radius:99px;padding:2px 8px;font-size:12px;color:var(--text-sub);cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.qty-badge:active{opacity:.7;}
+.item.checked .qty-badge{background:var(--green-bg);border-color:#a8d57a;color:var(--green-text);}
+.qty-edit{display:flex;align-items:center;gap:6px;margin-top:6px;padding:4px 0;}
+.qty-pm{width:28px;height:28px;border:0.5px solid var(--border);border-radius:7px;background:var(--surface);color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;}
+.qty-pm:active{background:var(--border);}
+.qty-num{width:42px;height:28px;text-align:center;border:0.5px solid var(--border);border-radius:7px;font-size:15px;background:var(--bg);color:var(--text);outline:none;font-family:inherit;}
+.qty-unit{height:28px;border:0.5px solid var(--border);border-radius:7px;padding:0 6px;font-size:13px;background:var(--bg);color:var(--text);outline:none;font-family:inherit;-webkit-appearance:none;appearance:none;}
+.qty-unit:focus{border-color:var(--green);}
+.qty-done{height:28px;padding:0 10px;background:var(--green);border:none;border-radius:7px;color:white;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;white-space:nowrap;}
 .pfc-scan-btn2{height:22px;padding:0 9px;background:var(--green);border:none;border-radius:99px;color:white;font-size:11px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:3px;font-family:inherit;}
 .pfc-scan-btn2 i{font-size:12px;}
 .pfc-manual-btn2{height:22px;padding:0 9px;background:var(--surface);border:0.5px solid var(--border);border-radius:99px;color:var(--text-sub);font-size:11px;cursor:pointer;display:inline-flex;align-items:center;gap:3px;font-family:inherit;}
@@ -130,7 +142,31 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-/* 前回リストバナー */
+/* 定番リスト */
+.tmpl-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:900;display:none;align-items:flex-end;justify-content:center;}
+.tmpl-modal.open{display:flex;}
+.tmpl-sheet{background:var(--card);border-radius:16px 16px 0 0;width:100%;max-width:430px;max-height:82vh;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,16px);}
+.tmpl-hd{padding:16px 16px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--border);}
+.tmpl-title{font-size:17px;font-weight:600;display:flex;align-items:center;gap:7px;}
+.tmpl-title i{color:#FFA726;font-size:19px;}
+.tmpl-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--text-hint);}
+.tmpl-body{flex:1;overflow-y:auto;padding:10px 14px;}
+.tmpl-empty{text-align:center;color:var(--text-hint);font-size:14px;padding:30px 0;line-height:1.8;}
+.tmpl-empty i{font-size:36px;display:block;margin-bottom:8px;color:var(--text-hint);}
+.tmpl-cat-label{font-size:11px;font-weight:600;color:var(--text-hint);text-transform:uppercase;letter-spacing:.06em;padding:8px 2px 4px;}
+.tmpl-row{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:0.5px solid var(--border);}
+.tmpl-row:last-child{border-bottom:none;}
+.tmpl-name{flex:1;font-size:15px;}
+.tmpl-qty{font-size:12px;color:var(--text-hint);background:var(--surface);border-radius:99px;padding:2px 8px;}
+.tmpl-del{background:none;border:none;color:var(--text-hint);cursor:pointer;padding:4px;font-size:16px;display:flex;align-items:center;}
+.tmpl-del:active{color:#FF3B30;}
+.tmpl-foot{padding:12px 14px 0;border-top:0.5px solid var(--border);display:flex;flex-direction:column;gap:8px;}
+.tmpl-save-btn{width:100%;height:44px;background:var(--surface);border:0.5px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;}
+.tmpl-save-btn:active{background:var(--border);}
+.tmpl-add-btn{width:100%;height:44px;background:#FFA726;border:none;border-radius:8px;color:white;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;}
+.tmpl-add-btn:active{filter:brightness(.9);}
+/* 全消去ボタン */
+.danger-btn{font-size:12px !important;color:#FF3B30 !important;padding:0 8px !important;}
 .prev-banner{background:var(--card);border:0.5px solid var(--border);border-radius:12px;margin-bottom:16px;overflow:hidden;}
 .prev-banner-hd{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;cursor:pointer;}
 .prev-banner-hd:active{background:var(--surface);}
@@ -204,7 +240,50 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .as-btn i{font-size:22px;color:var(--green);width:26px;flex-shrink:0;}
 .as-btn small{display:block;font-size:11px;color:var(--text-hint);margin-top:2px;}
 .as-btn.red{color:#FF3B30;}.as-btn.red i{color:#FF3B30;}
-</style>
+
+/* ① 定番リストモーダル */
+.tmpl-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:900;display:none;align-items:flex-end;justify-content:center;}
+.tmpl-modal.open{display:flex;}
+.tmpl-sheet{background:var(--card);border-radius:16px 16px 0 0;width:100%;max-width:430px;max-height:82vh;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,16px);}
+.tmpl-hd{padding:14px 16px 10px;border-bottom:0.5px solid var(--border);}
+.tmpl-hd-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.tmpl-title{font-size:17px;font-weight:600;}
+.tmpl-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--text-hint);padding:4px;}
+.tmpl-save-btn{width:100%;height:38px;background:var(--surface);border:0.5px solid var(--border);border-radius:8px;color:var(--text-sub);font-size:13px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px;}
+.tmpl-save-btn:active{background:var(--border);}
+.tmpl-body{overflow-y:auto;flex:1;padding:8px 16px;}
+.tmpl-cat{font-size:11px;font-weight:600;color:var(--text-hint);text-transform:uppercase;letter-spacing:.06em;padding:8px 2px 4px;}
+.tmpl-row{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:0.5px solid var(--border);cursor:pointer;}
+.tmpl-row:last-child{border-bottom:none;}
+.tmpl-check{width:22px;height:22px;min-width:22px;border-radius:6px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.tmpl-check.on{background:var(--green);border-color:var(--green);}
+.tmpl-check i{font-size:13px;color:#fff;opacity:0;}
+.tmpl-check.on i{opacity:1;}
+.tmpl-name{flex:1;font-size:15px;}
+.tmpl-qty{font-size:12px;color:var(--text-hint);}
+.tmpl-del{background:none;border:none;padding:4px 6px;cursor:pointer;color:var(--text-hint);font-size:15px;}
+.tmpl-del:active{color:#FF3B30;}
+.tmpl-empty{text-align:center;color:var(--text-hint);font-size:14px;padding:30px 0;}
+.tmpl-foot{padding:10px 16px 0;border-top:0.5px solid var(--border);display:flex;gap:8px;}
+.tmpl-add-btn{flex:1;height:44px;background:var(--green);border:none;border-radius:8px;color:#fff;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;}
+.tmpl-clear-btn{height:44px;padding:0 14px;background:none;border:0.5px solid var(--border);border-radius:8px;color:var(--text-hint);font-size:13px;cursor:pointer;font-family:inherit;}
+
+/* ② チェックリセットボタン（ヘッダー内）*/
+.reset-btn{font-size:13px;color:var(--text-sub);background:none;border:none;cursor:pointer;padding:6px 8px;border-radius:8px;font-family:inherit;display:flex;align-items:center;gap:3px;}
+.reset-btn:active{background:var(--surface);}
+
+/* ③ 栄養素除算タブ */
+.nutr-div-row{display:flex;align-items:center;gap:5px;margin-top:6px;padding-top:6px;border-top:0.5px solid var(--border);flex-wrap:wrap;}
+.nutr-div-label{font-size:11px;color:var(--text-hint);white-space:nowrap;}
+.ndtab{font-size:11px;padding:3px 9px;border:0.5px solid var(--border);border-radius:99px;background:none;color:var(--text-hint);cursor:pointer;font-family:inherit;transition:all .15s;}
+.ndtab.on{background:var(--green);border-color:var(--green);color:white;}
+
+/* ④ メモ欄 */
+.memo-area{margin-top:3px;}
+.memo-text{font-size:12px;color:var(--text-sub);line-height:1.4;cursor:pointer;padding:1px 0;}
+.memo-text:active{opacity:.7;}
+.memo-placeholder{font-size:11px;color:var(--text-hint);opacity:.5;cursor:pointer;}
+.memo-input{width:100%;border:none;border-bottom:0.5px solid var(--green);background:transparent;font-size:12px;color:var(--text);outline:none;font-family:inherit;padding:2px 0;}</style>
 </head>
 <body>
 <div class="app">
@@ -212,12 +291,19 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
     <div class="header-top">
       <h1><i class="ti ti-shopping-cart"></i>買い物リスト</h1>
       <div class="header-btns">
+        <button class="icon-btn" onclick="openTmplModal()" title="定番リスト" style="color:#FFA726">
+          <i class="ti ti-star"></i>
+        </button>
         <button class="icon-btn" onclick="openPrevModal()" title="前回のリスト" id="prevBtn" style="display:none">
           <i class="ti ti-history"></i>
+        </button>
+        <button class="reset-btn" onclick="resetAllChecks()" title="チェックをすべて外す">
+          <i class="ti ti-refresh"></i>リセット
         </button>
         <button class="icon-btn clear-btn" onclick="clearChecked()">
           <i class="ti ti-trash"></i>完了削除
         </button>
+        <button class="icon-btn danger-btn" onclick="clearAll()">全消去</button>
       </div>
     </div>
     <div class="prog-row"><span id="pt">0 / 0 完了</span><span id="pp">0%</span></div>
@@ -231,10 +317,16 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
       </label>
     </div>
     <div class="pfc-total-row" id="pfcTotalRow">
-      <span class="label">合計</span>
+      <span class="label" id="nutrDivLabel">合計</span>
       <span class="pfc-total-tag">たんぱく質 <b id="tP">0</b>g</span>
       <span class="pfc-total-tag">脂質 <b id="tF">0</b>g</span>
       <span class="pfc-total-tag">炭水化物 <b id="tC">0</b>g</span>
+    </div>
+    <div class="nutr-div-row" id="nutrDivRow" style="display:none">
+      <span class="nutr-div-label">表示：</span>
+      <button class="ndtab on" id="nd0" onclick="setNutrDiv(1)">合計</button>
+      <button class="ndtab" id="nd1" onclick="setNutrDiv(7)">1日(÷7)</button>
+      <button class="ndtab" id="nd2" onclick="setNutrDiv(21)">1食(÷21)</button>
     </div>
   </div>
   <div class="scroll" id="lc"></div>
@@ -255,6 +347,26 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
         <span class="mic-hint" id="micHint">🎤 マイクボタンで音声入力→即追加</span>
         <button class="add-btn" onclick="addItems()"><i class="ti ti-plus"></i> 追加</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ① 定番リストモーダル -->
+<div class="tmpl-modal" id="tmplModal" onclick="if(event.target===this)closeTmplModal()">
+  <div class="tmpl-sheet">
+    <div class="tmpl-hd">
+      <div class="tmpl-hd-top">
+        <div class="tmpl-title">⭐ 定番リスト</div>
+        <button class="tmpl-close" onclick="closeTmplModal()">×</button>
+      </div>
+      <button class="tmpl-save-btn" onclick="saveCurrentAsTemplate()">
+        <i class="ti ti-download" style="font-size:15px"></i> 現在のリストを定番として保存
+      </button>
+    </div>
+    <div class="tmpl-body" id="tmplBody"></div>
+    <div class="tmpl-foot">
+      <button class="tmpl-add-btn" onclick="addFromTemplate()">選択した食品をリストに追加</button>
+      <button class="tmpl-clear-btn" onclick="clearTemplate()">定番を消去</button>
     </div>
   </div>
 </div>
@@ -399,10 +511,14 @@ function getPFC(name){return PFC[name]||learnedPFC[name]||null;}
 let items=JSON.parse(localStorage.getItem('shopping_v4')||'[]');
 let nextId=items.length?Math.max(...items.map(i=>i.id))+1:1;
 let pfcVisible=JSON.parse(localStorage.getItem('pfcVisible')||'false');
-let prevList=JSON.parse(localStorage.getItem('prevList')||'null'); // {date, items:[{name,cat}]}
+let prevList=JSON.parse(localStorage.getItem('prevList')||'null');
+let templateList=JSON.parse(localStorage.getItem('templateList')||'[]'); // ① 定番リスト
+let nutritionDiv=parseInt(localStorage.getItem('nutritionDiv')||'1');    // ③ 除算値
 function save(){localStorage.setItem('shopping_v4',JSON.stringify(items));}
 function savePfc(){localStorage.setItem('pfcVisible',JSON.stringify(pfcVisible));}
 function savePrevList(){localStorage.setItem('prevList',JSON.stringify(prevList));}
+function saveTmpl(){localStorage.setItem('templateList',JSON.stringify(templateList));}
+function saveNutrDiv(){localStorage.setItem('nutritionDiv',String(nutritionDiv));}
 
 // ─── バーコード読み取り（写真撮影方式） ───────────────────
 // ライブカメラではなく「1枚撮影→ZXingで静止画解析」方式
@@ -418,6 +534,131 @@ function showManualForm(){
   if(!pfcVisible){pfcVisible=true;document.getElementById('pfcToggle').checked=true;savePfc();render();}
   const nd=document.getElementById(`nd_${_asTarget.itemId}`);
   if(nd) showPfcForm(_asTarget.itemId,_asTarget.name,nd);
+}
+
+// ─── ① 定番リスト ─────────────────────────────────────────
+let _tmplSel=new Set();
+
+function openTmplModal(){
+  _tmplSel=new Set(templateList.map((_,i)=>i));
+  renderTmplModal();
+  document.getElementById('tmplModal').classList.add('open');
+}
+function closeTmplModal(){document.getElementById('tmplModal').classList.remove('open');}
+
+function saveCurrentAsTemplate(){
+  if(!items.length){showToast('リストが空です');return;}
+  templateList=items.map(it=>({name:it.name,cat:it.cat,qty:it.qty||1,unit:it.unit||'個'}));
+  saveTmpl();
+  _tmplSel=new Set(templateList.map((_,i)=>i));
+  renderTmplModal();
+  showToast(`${templateList.length}品を定番リストに保存しました`);
+}
+function clearTemplate(){
+  if(!templateList.length) return;
+  templateList=[];saveTmpl();renderTmplModal();
+  showToast('定番リストを消去しました');
+}
+function toggleTmplItem(idx){
+  if(_tmplSel.has(idx)) _tmplSel.delete(idx); else _tmplSel.add(idx);
+  renderTmplModal();
+}
+function removeTmplItem(idx){
+  templateList.splice(idx,1);saveTmpl();
+  _tmplSel=new Set([..._tmplSel].filter(i=>i!==idx).map(i=>i>idx?i-1:i));
+  renderTmplModal();
+}
+function addFromTemplate(){
+  if(!_tmplSel.size){showToast('食品が選択されていません');return;}
+  const toAdd=templateList.filter((_,i)=>_tmplSel.has(i));
+  toAdd.forEach(t=>{
+    if(!items.find(x=>x.name===t.name)){
+      items.push({id:nextId++,name:t.name,cat:t.cat,qty:t.qty||1,unit:t.unit||'個',checked:false,memo:''});
+    }
+  });
+  save();render();closeTmplModal();
+  showToast(`${toAdd.length}品を追加しました`);
+}
+function renderTmplModal(){
+  const body=document.getElementById('tmplBody');
+  if(!templateList.length){
+    body.innerHTML='<div class="tmpl-empty">定番リストはまだありません<br><span style="font-size:12px">「現在のリストを定番として保存」で登録できます</span></div>';
+    return;
+  }
+  const grouped={};
+  templateList.forEach((it,i)=>{(grouped[it.cat]=grouped[it.cat]||[]).push({...it,idx:i});});
+  let html='';
+  CAT_ORDER.forEach(cat=>{
+    if(!grouped[cat]) return;
+    html+=`<div class="tmpl-cat">${cat}</div>`;
+    grouped[cat].forEach(it=>{
+      const on=_tmplSel.has(it.idx);
+      html+=`<div class="tmpl-row" onclick="toggleTmplItem(${it.idx})">
+        <div class="tmpl-check${on?' on':''}"><i class="ti ti-check"></i></div>
+        <span class="tmpl-name">${it.name}</span>
+        <span class="tmpl-qty">×${it.qty||1}${it.unit||'個'}</span>
+        <button class="tmpl-del" onclick="event.stopPropagation();removeTmplItem(${it.idx})"><i class="ti ti-x"></i></button>
+      </div>`;
+    });
+  });
+  body.innerHTML=html;
+}
+
+// ─── ② チェックを全てリセット ─────────────────────────────
+function resetAllChecks(){
+  if(!items.some(i=>i.checked)){showToast('チェック済みの食品がありません');return;}
+  items.forEach(i=>i.checked=false);
+  save();render();
+  showToast('チェックをすべて外しました');
+}
+
+// ─── ③ 栄養素除算タブ ────────────────────────────────────
+function setNutrDiv(div){
+  nutritionDiv=div;saveNutrDiv();
+  ['nd0','nd1','nd2'].forEach((id,i)=>{
+    const btn=document.getElementById(id);
+    if(btn) btn.className='ndtab'+(([1,7,21][i])===div?' on':'');
+  });
+  const labels={1:'合計',7:'1日あたり(÷7)',21:'1食あたり(÷21)'};
+  const lbl=document.getElementById('nutrDivLabel');
+  if(lbl) lbl.textContent=labels[div]||'合計';
+  updateNutrTotals();
+}
+function updateNutrTotals(){
+  let tP=0,tF=0,tC=0;
+  items.forEach(it=>{const p=getPFC(it.name);if(p){tP+=p[0];tF+=p[1];tC+=p[2];}});
+  const d=nutritionDiv||1;
+  document.getElementById('tP').textContent=Math.round(tP/d*10)/10;
+  document.getElementById('tF').textContent=Math.round(tF/d*10)/10;
+  document.getElementById('tC').textContent=Math.round(tC/d*10)/10;
+}
+
+// ─── ④ メモ欄 ────────────────────────────────────────────
+function editMemo(itemId,e){
+  e.stopPropagation();
+  const area=document.getElementById(`ma_${itemId}`);
+  if(!area) return;
+  const it=items.find(i=>i.id===itemId);
+  if(!it) return;
+  area.innerHTML=`<input class="memo-input" id="mi_${itemId}" type="text" value="${(it.memo||'').replace(/"/g,'&quot;')}" placeholder="メモを入力（例：安ければ2袋）" maxlength="50">`;
+  const inp=area.querySelector(`#mi_${itemId}`);
+  inp.focus();
+  inp.select();
+  inp.addEventListener('blur',()=>saveMemo(itemId));
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){inp.blur();}});
+}
+function saveMemo(itemId){
+  const inp=document.getElementById(`mi_${itemId}`);
+  if(!inp) return;
+  const it=items.find(i=>i.id===itemId);
+  if(it){it.memo=inp.value.trim();save();}
+  const area=document.getElementById(`ma_${itemId}`);
+  if(area){
+    const memo=it&&it.memo;
+    area.innerHTML=memo
+      ?`<span class="memo-text" onclick="editMemo(${itemId},event)">📝 ${memo}</span>`
+      :`<span class="memo-placeholder" onclick="editMemo(${itemId},event)">+ メモを追加</span>`;
+  }
 }
 
 // ─── PFC手入力フォーム ────────────────────────────────────
@@ -451,14 +692,24 @@ function del(id){items=items.filter(i=>i.id!==id);save();render();}
 function clearChecked(){
   const checked=items.filter(i=>i.checked);
   if(!checked.length){showToast("完了済みのアイテムがありません");return;}
-  // 削除前に「前回のリスト」として保存
   const now=new Date();
   const dateStr=`${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
-  prevList={date:dateStr, items:checked.map(i=>({name:i.name,cat:i.cat}))};
+  prevList={date:dateStr, items:checked.map(i=>({name:i.name,cat:i.cat,qty:i.qty||1,unit:i.unit||'個'}))};
   savePrevList();
   items=items.filter(i=>!i.checked);
   save();render();
   showToast(checked.length+"件削除・前回リストに保存しました");
+}
+function clearAll(){
+  if(!items.length){showToast('リストが空です');return;}
+  const now=new Date();
+  const dateStr=`${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+  prevList={date:dateStr, items:items.map(i=>({name:i.name,cat:i.cat,qty:i.qty||1,unit:i.unit||'個'}))};
+  savePrevList();
+  const n=items.length;
+  items=[];
+  save();render();
+  showToast(`${n}品を全消去しました（前回リストに保存済）`);
 }
 
 // ─── 前回リスト ───────────────────────────────────────────
@@ -595,7 +846,55 @@ function stopMic(){
   recognition=null;
 }
 
-// ─── 描画 ────────────────────────────────────────────────
+// ─── 数量入力 ─────────────────────────────────────────────
+const UNITS=['個','本','袋','枚','缶','パック','束','切れ','尾','房','玉','片','合','g','kg','ml','L'];
+let _editingQtyId=null;
+
+function editQty(itemId,e){
+  e.stopPropagation();
+  // すでに開いているフォームを閉じる
+  if(_editingQtyId!==null){
+    const old=document.getElementById(`qe_${_editingQtyId}`);
+    if(old) old.remove();
+    if(_editingQtyId===itemId){_editingQtyId=null;return;}
+  }
+  const it=items.find(i=>i.id===itemId);
+  if(!it) return;
+  _editingQtyId=itemId;
+  const container=document.getElementById(`qc_${itemId}`);
+  if(!container) return;
+  const opts=UNITS.map(u=>`<option value="${u}"${(it.unit||'個')===u?' selected':''}>${u}</option>`).join('');
+  const form=document.createElement('div');
+  form.className='qty-edit'; form.id=`qe_${itemId}`;
+  form.innerHTML=
+    `<button class="qty-pm" onclick="adjQty(${itemId},-1)">－</button>`+
+    `<input class="qty-num" type="number" id="qn_${itemId}" value="${it.qty||1}" min="1" max="99">`+
+    `<button class="qty-pm" onclick="adjQty(${itemId},1)">＋</button>`+
+    `<select class="qty-unit" id="qu_${itemId}">${opts}</select>`+
+    `<button class="qty-done" onclick="saveQty(${itemId})">完了</button>`;
+  container.appendChild(form);
+  document.getElementById(`qn_${itemId}`).focus();
+}
+function adjQty(itemId,delta){
+  const inp=document.getElementById(`qn_${itemId}`);
+  if(!inp) return;
+  inp.value=Math.max(1,Math.min(99,(parseInt(inp.value)||1)+delta));
+}
+function saveQty(itemId){
+  const num=document.getElementById(`qn_${itemId}`);
+  const unit=document.getElementById(`qu_${itemId}`);
+  if(!num||!unit) return;
+  const it=items.find(i=>i.id===itemId);
+  if(it){it.qty=parseInt(num.value)||1;it.unit=unit.value;save();}
+  const form=document.getElementById(`qe_${itemId}`);
+  if(form) form.remove();
+  _editingQtyId=null;
+  // バッジだけ更新（再描画なしで軽量に）
+  const badge=document.getElementById(`qb_${itemId}`);
+  if(badge&&it) badge.textContent=`×${it.qty}${it.unit}`;
+}
+
+
 let toastTimer;
 function showToast(msg){
   const el=document.getElementById('toast');
@@ -612,16 +911,24 @@ function render(){
   document.getElementById('pp').textContent=total?Math.round(done/total*100)+'%':'0%';
   document.getElementById('pb').style.width=total?Math.round(done/total*100)+'%':'0%';
 
-  // 合計PFC
+  // ③ 栄養素合計・除算タブ
   const totalRow=document.getElementById('pfcTotalRow');
+  const nutrDivRow=document.getElementById('nutrDivRow');
   if(pfcVisible){
-    let tP=0,tF=0,tC=0;
-    items.forEach(it=>{const p=getPFC(it.name);if(p){tP+=p[0];tF+=p[1];tC+=p[2];}});
-    document.getElementById('tP').textContent=Math.round(tP*10)/10;
-    document.getElementById('tF').textContent=Math.round(tF*10)/10;
-    document.getElementById('tC').textContent=Math.round(tC*10)/10;
     totalRow.classList.add('visible');
-  }else{totalRow.classList.remove('visible');}
+    if(nutrDivRow) nutrDivRow.style.display='';
+    ['nd0','nd1','nd2'].forEach((id,i)=>{
+      const b=document.getElementById(id);
+      if(b) b.className='ndtab'+([1,7,21][i]===nutritionDiv?' on':'');
+    });
+    const labels={1:'合計',7:'1日あたり(÷7)',21:'1食あたり(÷21)'};
+    const lbl=document.getElementById('nutrDivLabel');
+    if(lbl) lbl.textContent=labels[nutritionDiv]||'合計';
+    updateNutrTotals();
+  }else{
+    totalRow.classList.remove('visible');
+    if(nutrDivRow) nutrDivRow.style.display='none';
+  }
 
   // 前回リストボタン表示制御
   const prevBtn=document.getElementById('prevBtn');
@@ -682,12 +989,23 @@ function render(){
       const div=document.createElement('div');
       div.className='item'+(it.checked?' checked':'');
       const cStyle=it.checked?`background:${color};border-color:${color}`:`border-color:${color}60`;
+      const qty=it.qty||1; const unit=it.unit||'個';
+      const memo=it.memo||'';
+      const memoHtml=`<div class="memo-area" id="ma_${it.id}">`+
+        (memo
+          ?`<span class="memo-text" onclick="editMemo(${it.id},event)">📝 ${memo}</span>`
+          :`<span class="memo-placeholder" onclick="editMemo(${it.id},event)">+ メモを追加</span>`)+
+        `</div>`;
       div.innerHTML=
         `<div class="color-bar" style="background:${color}"></div>`+
         `<div class="item-inner">`+
           `<div class="circle" style="${cStyle}"><i class="ti ti-check"></i></div>`+
-          `<div class="item-text">`+
-            `<span class="item-name">${it.name}</span>`+
+          `<div class="item-text" id="qc_${it.id}">`+
+            `<div class="item-name-row">`+
+              `<span class="item-name">${it.name}</span>`+
+              `<span class="qty-badge" id="qb_${it.id}" onclick="editQty(${it.id},event)">×${qty}${unit}</span>`+
+            `</div>`+
+            memoHtml+
             pfcHtml+
           `</div>`+
           `<button class="del" aria-label="削除"><i class="ti ti-trash"></i></button>`+
