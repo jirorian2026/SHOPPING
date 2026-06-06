@@ -26,11 +26,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
 .header h1{font-size:22px;font-weight:700;display:flex;align-items:center;gap:8px;}
 .header h1 i{color:var(--green);}
-.header-btns{display:flex;align-items:center;gap:4px;}
-.icon-btn{background:none;border:none;cursor:pointer;padding:6px 8px;border-radius:8px;color:var(--text-sub);font-family:inherit;font-size:13px;display:flex;align-items:center;gap:4px;}
+.header-btns{display:flex;align-items:center;gap:2px;flex-shrink:0;}
+.icon-btn{background:none;border:none;cursor:pointer;padding:7px;border-radius:8px;color:var(--text-sub);font-family:inherit;font-size:13px;display:flex;align-items:center;justify-content:center;}
 .icon-btn:active{background:var(--surface);}
-.icon-btn i{font-size:17px;}
-.clear-btn{font-size:13px;color:#FF3B30;}
+.icon-btn i{font-size:20px;}
+.clear-btn{color:#FF3B30;}
+.danger-btn{color:#FF3B30;}
 .prog-row{display:flex;justify-content:space-between;font-size:12px;color:var(--text-sub);margin-bottom:6px;}
 .prog-wrap{background:var(--bg);border-radius:99px;height:5px;overflow:hidden;margin-bottom:10px;}
 .prog-fill{height:100%;background:var(--green);border-radius:99px;transition:width .35s ease;}
@@ -105,19 +106,19 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .empty i{font-size:48px;display:block;margin-bottom:14px;}
 
 /* 追加パネル */
-.add-panel{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--card);border-top:0.5px solid var(--border);padding:10px 16px env(safe-area-inset-bottom,16px);z-index:200;}
-.add-methods{display:flex;flex-direction:column;gap:8px;}
-.textarea-wrap{position:relative;margin-bottom:0;}
-.add-panel textarea{width:100%;min-height:58px;resize:none;border:0.5px solid var(--border);border-radius:8px;padding:9px 44px 9px 12px;font-size:15px;background:var(--bg);color:var(--text);outline:none;font-family:inherit;line-height:1.6;transition:min-height .25s ease,box-shadow .15s;}
-.add-panel textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(99,153,34,.15);min-height:120px;}
+.add-panel{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--card);border-top:0.5px solid var(--border);padding:10px 16px env(safe-area-inset-bottom,16px);z-index:200;display:flex;flex-direction:column;gap:8px;}
+.textarea-wrap{position:relative;}
+
+.add-panel textarea{width:100%;min-height:50px;resize:none;border:0.5px solid var(--border);border-radius:8px;padding:10px 44px 10px 12px;font-size:15px;background:var(--bg);color:var(--text);outline:none;font-family:inherit;line-height:1.5;transition:min-height .2s,box-shadow .15s;}
+.add-panel textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(99,153,34,.15);min-height:90px;}
 .mic-btn{position:absolute;right:8px;top:10px;width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;background:var(--surface);color:var(--text-sub);}
 .mic-btn.listening{background:#FF3B30;color:white;animation:pulse 1s infinite;}
-.mic-btn.listening-pulse{background:#FF3B30;color:white;}
+
 .mic-btn i{font-size:17px;}
 @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
-.add-bottom-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px;}
-.mic-hint{font-size:11px;color:var(--text-hint);flex:1;}
-.add-btn{height:40px;padding:0 18px;background:var(--green);border:none;border-radius:8px;color:white;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:inherit;white-space:nowrap;transition:background .15s;}
+
+
+.add-btn{width:100%;height:42px;background:var(--green);border:none;border-radius:8px;color:white;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;font-family:inherit;transition:background .15s;}
 .add-btn:active{background:var(--green-dark);}
 .scan-btns-row{display:flex;gap:8px;}
 .scan-add-btn{flex:1;border:1.5px dashed var(--border);background:none;border-radius:10px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:10px;color:var(--text);font-family:inherit;text-align:left;transition:all .15s;}
@@ -291,19 +292,20 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
     <div class="header-top">
       <h1><i class="ti ti-shopping-cart"></i>買い物リスト</h1>
       <div class="header-btns">
+      <div class="header-btns">
         <button class="icon-btn" onclick="openTmplModal()" title="定番リスト" style="color:#FFA726">
           <i class="ti ti-star"></i>
         </button>
         <button class="icon-btn" onclick="openPrevModal()" title="前回のリスト" id="prevBtn" style="display:none">
           <i class="ti ti-history"></i>
         </button>
-        <button class="reset-btn" onclick="resetAllChecks()" title="チェックをすべて外す">
-          <i class="ti ti-refresh"></i>リセット
+        <button class="icon-btn clear-btn" onclick="clearChecked()" title="完了済みを削除">
+          <i class="ti ti-trash"></i>
         </button>
-        <button class="icon-btn clear-btn" onclick="clearChecked()">
-          <i class="ti ti-trash"></i>完了削除
+        <button class="icon-btn danger-btn" onclick="clearAll()" title="全て削除">
+          <i class="ti ti-trash-x"></i>
         </button>
-        <button class="icon-btn danger-btn" onclick="clearAll()">全消去</button>
+      </div>
       </div>
     </div>
     <div class="prog-row"><span id="pt">0 / 0 完了</span><span id="pp">0%</span></div>
@@ -334,21 +336,13 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 
 <!-- 追加パネル -->
 <div class="add-panel">
-  <div class="add-methods">
-    <!-- テキスト入力 -->
-    <div class="method-row" id="textMethod">
-      <div class="textarea-wrap">
-        <textarea id="inp" placeholder="食品名を入力（複数はカンマや改行でOK）&#10;例：にんじん、鶏むね肉、冷凍餃子"></textarea>
-        <button class="mic-btn" id="micBtn" onclick="toggleMic()" title="音声でそのまま追加">
-          <i class="ti ti-microphone" id="micIcon"></i>
-        </button>
-      </div>
-      <div class="add-bottom-row">
-        <span class="mic-hint" id="micHint">🎤 マイクボタンで音声入力→即追加</span>
-        <button class="add-btn" onclick="addItems()"><i class="ti ti-plus"></i> 追加</button>
-      </div>
-    </div>
+  <div class="textarea-wrap">
+    <textarea id="inp" placeholder="食品名を入力（複数はカンマや改行でOK）"></textarea>
+    <button class="mic-btn" id="micBtn" onclick="toggleMic()" title="音声入力">
+      <i class="ti ti-microphone" id="micIcon"></i>
+    </button>
   </div>
+  <button class="add-btn" onclick="addItems()"><i class="ti ti-plus"></i> 追加</button>
 </div>
 
 <!-- ① 定番リストモーダル -->
