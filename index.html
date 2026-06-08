@@ -279,12 +279,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .ndtab{font-size:11px;padding:3px 9px;border:0.5px solid var(--border);border-radius:99px;background:none;color:var(--text-hint);cursor:pointer;font-family:inherit;transition:all .15s;}
 .ndtab.on{background:var(--green);border-color:var(--green);color:white;}
 
-/* ④ メモ欄 */
-.memo-area{margin-top:3px;}
-.memo-text{font-size:12px;color:var(--text-sub);line-height:1.4;cursor:pointer;padding:1px 0;}
-.memo-text:active{opacity:.7;}
-.memo-placeholder{font-size:11px;color:var(--text-hint);opacity:.5;cursor:pointer;}
-.memo-input{width:100%;border:none;border-bottom:0.5px solid var(--green);background:transparent;font-size:12px;color:var(--text);outline:none;font-family:inherit;padding:2px 0;}</style>
+.memo-input{display:none;}</style>
 </head>
 <body>
 <div class="app">
@@ -627,34 +622,6 @@ function updateNutrTotals(){
   document.getElementById('tC').textContent=Math.round(tC/d*10)/10;
 }
 
-// ─── ④ メモ欄 ────────────────────────────────────────────
-function editMemo(itemId,e){
-  e.stopPropagation();
-  const area=document.getElementById(`ma_${itemId}`);
-  if(!area) return;
-  const it=items.find(i=>i.id===itemId);
-  if(!it) return;
-  area.innerHTML=`<input class="memo-input" id="mi_${itemId}" type="text" value="${(it.memo||'').replace(/"/g,'&quot;')}" placeholder="メモを入力（例：安ければ2袋）" maxlength="50">`;
-  const inp=area.querySelector(`#mi_${itemId}`);
-  inp.focus();
-  inp.select();
-  inp.addEventListener('blur',()=>saveMemo(itemId));
-  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){inp.blur();}});
-}
-function saveMemo(itemId){
-  const inp=document.getElementById(`mi_${itemId}`);
-  if(!inp) return;
-  const it=items.find(i=>i.id===itemId);
-  if(it){it.memo=inp.value.trim();save();}
-  const area=document.getElementById(`ma_${itemId}`);
-  if(area){
-    const memo=it&&it.memo;
-    area.innerHTML=memo
-      ?`<span class="memo-text" onclick="editMemo(${itemId},event)">📝 ${memo}</span>`
-      :`<span class="memo-placeholder" onclick="editMemo(${itemId},event)">+ メモを追加</span>`;
-  }
-}
-
 // ─── PFC手入力フォーム ────────────────────────────────────
 function showPfcForm(itemId,name,el){
   document.querySelectorAll('.pfc-edit-form').forEach(f=>f.remove());
@@ -985,12 +952,6 @@ function render(){
       div.className='item'+(it.checked?' checked':'');
       const cStyle=it.checked?`background:${color};border-color:${color}`:`border-color:${color}60`;
       const qty=it.qty||1; const unit=it.unit||'個';
-      const memo=it.memo||'';
-      const memoHtml=`<div class="memo-area" id="ma_${it.id}">`+
-        (memo
-          ?`<span class="memo-text" onclick="editMemo(${it.id},event)">📝 ${memo}</span>`
-          :`<span class="memo-placeholder" onclick="editMemo(${it.id},event)">+ メモを追加</span>`)+
-        `</div>`;
       div.innerHTML=
         `<div class="color-bar" style="background:${color}"></div>`+
         `<div class="item-inner">`+
@@ -1000,7 +961,6 @@ function render(){
               `<span class="item-name">${it.name}</span>`+
               `<span class="qty-badge" id="qb_${it.id}" onclick="editQty(${it.id},event)">×${qty}${unit}</span>`+
             `</div>`+
-            memoHtml+
             pfcHtml+
           `</div>`+
           `<button class="del" aria-label="削除"><i class="ti ti-trash"></i></button>`+
